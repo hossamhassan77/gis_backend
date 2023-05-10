@@ -1,23 +1,45 @@
 import requests
 import random
 import string
-from fastapi import FastAPI
-import uvicorn
 import math
+import json
 from pydantic import BaseModel
-from geopy.distance import distance
-from geopy.point import Point
+from shapely.geometry import Point
+import geopandas
 
-app = FastAPI()
 
 class item(BaseModel):
-    lat: float
-    lng: float
-    alt: float
-    distance: int
-    direction: str
-    direction_to_degree = {"north": 0, "east": 90, "south": 180, "west": 270}
+    map_bound: list
+    imgs_numbers: int
+    alt: int
 
+    def generate_polygon_from_listof_points(bound: list):
+        """Receive a list of objects of polygon's points to convert it into a geographic polygon could be intersected for area of interest feature.
+            >>> item.generate_polygon_from_listof_points(bound)
+            return geopandas.GeoDataFrame
+            """
+        outer_coords = []
+        for xy in bound :
+            inner_coordinates = []
+            inner_coordinates.append(xy['lng'])
+            inner_coordinates.append(xy['lat'])
+            outer_coords.append(inner_coordinates)
+        polygon = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [outer_coords]
+                        }
+                    }
+                            ]
+                   }
+        polygon2json = json.dumps(polygon)
+        processed_area = geopandas.read_file(polygon2json)
+        return (processed_area)
+    
     def calculate_zoom_level(altitude):
         pixel_distance = (altitude * 2 * math.pi * 1000) / (640 * 256 * 2 ** 20)
         zoom_level = int(math.log((2 * math.pi * 1000 * math.cos(math.radians(37.7749))) / (pixel_distance * 640), 2))
@@ -25,6 +47,7 @@ class item(BaseModel):
         
     def save_googleMaps_imgs(latitude, longitude, new_lat, new_lng, direction, zoom):
         img_count = 0
+        folder_name = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
         while new_lat != latitude and new_lng != longitude:
             img_count += 1
             Image_name = ''.join(random.choices(string.ascii_letters + string.digits, k=25))
@@ -43,20 +66,18 @@ class item(BaseModel):
                 elif new_lng < longitude:
                     longitude -= 0.001
                     longitude = round(longitude, 3)
-            with open(f"personal_github\gis_backend\GoogleMaps_API\Images\{Image_name}.png", 'wb') as f:
+            with open(f"\{folder_name}\{img_count}_{Image_name}.png", 'wb') as f:
                 for chunk in response:
                     f.write(chunk)
-        return ({"img_count": img_count, "Status": response.status_code})
+        return ({"img_count": img_count, "directory": f"\{folder_name}"})
 
-@app.get("/googleMaps")
-def zoom(request: item):
-    zoom_level = item.calculate_zoom_level(request.alt)
-
-    new_point = distance(meters=request.distance).destination(Point(request.lat, request.lng), bearing=request.direction_to_degree[request.direction])
-    new_point_lat, new_point_lng = round(new_point.latitude, 3), round(new_point.longitude, 3)
-
-    respond = item.save_googleMaps_imgs(request.lat, request.lng, new_point_lat, new_point_lng, request.direction, zoom_level)
-    return(respond)
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    def random_points_in_polygon(number, polygon):
+        points = []
+        min_x, min_y, max_x, max_y = polygon.bounds
+        i = 0
+        while i < number:
+            point = Point(random.uniform(min_x, max_x), random.uniform(min_y, max_y))
+            if polygon.contains(point):
+                points.append(point)
+                i += 1
+        return (points)
