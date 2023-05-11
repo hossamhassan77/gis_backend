@@ -24,11 +24,10 @@ def get_imgs_in_map_bound(request: item):
     list_of_random_points = item.random_points_in_polygon(request.imgs_numbers, generate_polygon.iloc[0].geometry)
     for i, point in enumerate(list_of_random_points):
         i+=1
-        Image_name =''.join(random.choices(string.ascii_letters + string.digits, k=8))
         response = requests.get(f'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center={point.y},{point.x}&zoom={zoom_level}&size=640x640&key=AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg')
         if not os.path.exists(f"{folder_name}"):
                     os.makedirs(f"{folder_name}")
-        with open(f"{folder_name}\{i}_{Image_name}.png", 'wb') as f:
+        with open(f"{folder_name}\{i}_{point.y},{point.x}.png", 'wb') as f:
                     for chunk in response:
                         f.write(chunk)
     return ({"Result": f"Images saved in \{folder_name}"})

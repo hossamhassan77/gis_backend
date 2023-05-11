@@ -50,7 +50,7 @@ class item(BaseModel):
         folder_name = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
         while new_lat != latitude and new_lng != longitude:
             img_count += 1
-            Image_name = ''.join(random.choices(string.ascii_letters + string.digits, k=25))
+            
             response = requests.get(f'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center={latitude},{longitude}&zoom={zoom}&size=640x640&key=AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg')
             if direction in ("north", "south") :
                 if new_lat > latitude:
@@ -66,7 +66,7 @@ class item(BaseModel):
                 elif new_lng < longitude:
                     longitude -= 0.001
                     longitude = round(longitude, 3)
-            with open(f"\{folder_name}\{img_count}_{Image_name}.png", 'wb') as f:
+            with open(f"\{folder_name}\{img_count}-{latitude},{longitude}.png", 'wb') as f:
                 for chunk in response:
                     f.write(chunk)
         return ({"img_count": img_count, "directory": f"\{folder_name}"})
