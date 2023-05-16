@@ -80,4 +80,7 @@ class item(BaseModel):
             if polygon.contains(point):
                 points.append(point)
                 i += 1
-        return (points)
+        print (points)
+
+
+# item.random_points_in_polygon(10, item.generate_polygon_from_listof_points([{'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0068887, 'lng': -117.0926903}]).iloc[0].geometry)
