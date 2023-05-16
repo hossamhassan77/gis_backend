@@ -14,15 +14,15 @@ class item(BaseModel):
     alt: int
 
     def generate_polygon_from_listof_points(bound: list):
-        """Receive a list of objects of polygon's points to convert it into a geographic polygon could be intersected for area of interest feature.
+        """Receive a list of objects of polygon"s points to convert it into a geographic polygon could be intersected for area of interest feature.
             >>> item.generate_polygon_from_listof_points(bound)
             return geopandas.GeoDataFrame
             """
         outer_coords = []
         for xy in bound :
             inner_coordinates = []
-            inner_coordinates.append(xy['lng'])
-            inner_coordinates.append(xy['lat'])
+            inner_coordinates.append(xy["lng"])
+            inner_coordinates.append(xy["lat"])
             outer_coords.append(inner_coordinates)
         polygon = {
                 "type": "FeatureCollection",
@@ -51,7 +51,7 @@ class item(BaseModel):
         while new_lat != latitude and new_lng != longitude:
             img_count += 1
             
-            response = requests.get(f'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center={latitude},{longitude}&zoom={zoom}&size=640x640&key=AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg')
+            response = requests.get(f"https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center={latitude},{longitude}&zoom={zoom}&size=640x640&key=AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg")
             if direction in ("north", "south") :
                 if new_lat > latitude:
                     latitude += 0.001
@@ -66,7 +66,7 @@ class item(BaseModel):
                 elif new_lng < longitude:
                     longitude -= 0.001
                     longitude = round(longitude, 3)
-            with open(f"\{folder_name}\{img_count}-{latitude},{longitude}.png", 'wb') as f:
+            with open(f"\{folder_name}\{img_count}-{latitude},{longitude}.png", "wb") as f:
                 for chunk in response:
                     f.write(chunk)
         return ({"img_count": img_count, "directory": f"\{folder_name}"})
@@ -83,4 +83,4 @@ class item(BaseModel):
         print (points)
 
 
-# item.random_points_in_polygon(10, item.generate_polygon_from_listof_points([{'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0068887, 'lng': -117.0926903}]).iloc[0].geometry)
+# item.random_points_in_polygon(2, item.generate_polygon_from_listof_points([{'lat': 34.0073887, 'lng': -117.0931903}, {'lat': 34.0068887, 'lng': -117.0926903}, {'lat': 34.0073887, 'lng': -117.0921903}, {'lat': 34.0068887, 'lng': -117.0926903}]).iloc[0].geometry)

@@ -206,7 +206,7 @@ def get_geographic_coord_from_img(photo: str):
     polygon = areaOfInterestPath(coord_list)
     list_of_random_points = random_points_in_polygon(20, polygon.iloc[0].geometry)
     for i, point in enumerate(list_of_random_points):
-            response = requests.get(f'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center={point.y},{point.x}&zoom={19}&size=640x640&key=AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg')
+            response = requests.get(f'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center={point.y},{point.x}&zoom={20}&size=640x640&key=AIzaSyCIog63DvS6W2p-fhSWYFzNvDvqYFvUBPg')
             if not os.path.exists(f"{name}"):
                         os.makedirs(f"{name}")
             with open(f"{name}\{i}_{point.y},{point.x}.png", 'wb') as f:
@@ -214,15 +214,16 @@ def get_geographic_coord_from_img(photo: str):
                             f.write(chunk)
     print ({"Result": f"Images saved in \{name}"})
 
-folder_path = r'D:\Drones & Mapping\Datasets\Ortho mapping tutorial_Drone data\images'
-files_list = []
-for root, dirs, files in os.walk(folder_path):
-    for file in files:
-        file_path = os.path.join(root, file) 
-        _, file_extension = os.path.splitext(file_path)
-        if file_extension == ".JPG":
-            files_list.append(file_path)
+folders_path = [r'D:\Drones & Mapping\drones15Feb2023\Data for GIS\DJI_202302141624_001_Zenmuse-L1-mission', r'D:\Drones & Mapping\drones15Feb2023\Data for GIS\DJI_202302141657_003_Zenmuse-L1-mission', r'D:\Drones & Mapping\Raw_Images12Apr23\DCIM\DJI_202304121320_003', r'D:\Drones & Mapping\Raw_Images12Apr23\DCIM\DJI_202304121305_001']
+for i in folders_path:
+    files_list = []
+    for root, dirs, files in os.walk(i):
+        for file in files:
+            file_path = os.path.join(root, file) 
+            _, file_extension = os.path.splitext(file_path)
+            if file_extension == ".JPG":
+                files_list.append(file_path)
 
 
-for i in files_list:
-    get_geographic_coord_from_img(i)
+    for i in files_list:
+        get_geographic_coord_from_img(i)
