@@ -1,0 +1,18 @@
+{
+	"info": {
+		"_postman_id": "23b09285-5b31-41b2-a6fe-352f52088e3a",
+		"name": "3d-map",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18992586"
+	},
+	"item": [
+		{
+			"name": "drones-products",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

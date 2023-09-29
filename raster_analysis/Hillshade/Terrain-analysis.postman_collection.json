@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "a9168220-376d-42a8-9693-f8bcd90c0645",
+		"name": "Terrain-analysis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18992586"
+	},
+	"item": [
+		{
+			"name": "dem-hillshade",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/dem-hillshade?input_dem=D:\\Github\\GIS\\wakeb_mapdata\\ALPSMLC30_N021E039_DSM.tif",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"dem-hillshade"
+					],
+					"query": [
+						{
+							"key": "input_dem",
+							"value": "D:\\Github\\GIS\\wakeb_mapdata\\ALPSMLC30_N021E039_DSM.tif"
+						},
+						{
+							"key": null,
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/mapBound-hillshade",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/mapBound-hillshade?west=32.13973602505795&south=29.88397934934521&east=32.956926480302506&north=30.22656908627855",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"mapBound-hillshade"
+					],
+					"query": [
+						{
+							"key": "west",
+							"value": "32.13973602505795"
+						},
+						{
+							"key": "south",
+							"value": "29.88397934934521"
+						},
+						{
+							"key": "east",
+							"value": "32.956926480302506"
+						},
+						{
+							"key": "north",
+							"value": "30.22656908627855"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
