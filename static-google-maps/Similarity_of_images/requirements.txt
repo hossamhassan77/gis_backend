@@ -1,6 +1,0 @@
-opencv
-tqdm
-skimage
-pydantic
-uvicorn
-fastapi
