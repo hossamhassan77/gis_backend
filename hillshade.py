@@ -1,19 +1,17 @@
-import os
-import subprocess
-import random
-import string
+from osgeo import gdal
 
-def dem_hillshade(input_dem: str) -> dict:
-    """Converts DEM to hillshade using GDAL cmd."""
-    if not os.path.exists('raster_analysis_output'):
-        os.mkdir('raster_analysis_output')
-    file_name = ''.join(random.choices(string.ascii_letters + string.digits, k=5))
-    try:
-        command = f'gdaldem hillshade {input_dem} raster_analysis_output/{file_name}.tif'
-        subprocess.run(command, shell=True, check=False)
-        return {"status": f"Output saved in Raster_analysis_output\\{file_name}.tif"}
-    except Exception as e:
-        raise ValueError("Entity not processable.") from e
+def dem_to_hillshade(input_dem: str, output_hillshade: str):
+    """Converts DEM to hillshade using GDAL Python API."""
+    # Open the DEM file
+    dem_dataset = gdal.Open(input_dem)
+    if not dem_dataset:
+        raise FileNotFoundError(f"Unable to open DEM file: {input_dem}")
+    # Generate hillshade
+    gdal.DEMProcessing(output_hillshade, dem_dataset, 'hillshade')
+    print(f"Hillshade saved to {output_hillshade}")
 
 if __name__ == "__main__":
-    print(dem_hillshade(r"D:\Data\DEM\GMTED2010N10E030_075\South_Sinai.tif"))
+    input_dem = r"D:\Data\DEM\GMTED2010N10E030_075\South_Sinai.tif"
+    output_hillshade = r"D:\Data\DEM\GMTED2010N10E030_075\South_Sinai_hillshade.tif"
+
+    dem_to_hillshade(input_dem, output_hillshade)
